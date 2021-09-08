@@ -1,7 +1,3 @@
-javascript:
-
-
-
 function baslangic(){
 	document.getElementsByClassName("button-1iktpaT1 size-m-2G7L7Qat intent-primary-1-IOYcbg appearance-default-dMjF_2Hu")[0].disabled=true;
 	html = '<div style="margin-left:1%">';
