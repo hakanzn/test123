@@ -1,3 +1,4 @@
+
 function baslangic(){
 	document.getElementsByClassName("button-1iktpaT1 size-m-2G7L7Qat intent-primary-1-IOYcbg appearance-default-dMjF_2Hu")[0].disabled=true;
 	html = '<div style="margin-left:1%">';
@@ -7,7 +8,8 @@ function baslangic(){
 	html += '<span>1. Değer Max</span>';
 	html += '<input id = "inp2" style = "background-color:black;height: ' + periyot.offsetHeight + 'px;width: ' + periyot.offsetWidth + 'px"><br>';
 	html += '<span>2. Değer Max</span>';
-	html += '<input id = "inp3" style = "background-color:black;height: ' + periyot.offsetHeight + 'px;width: ' + periyot.offsetWidth + 'px"><br>';
+	html += '<input id = "inp3" style = "background-color:black;height: ' + periyot.offsetHeight + 'px;width: ' + periyot.offsetWidth + 'px"><br><br>';
+	html += '<div><span title = "Stop Loss Değerini Girin!">StopLoss-1&nbsp;<span/><input min = "0" step = ".5" style = "width:40px;background-color:black" type="number" id="inp4" value="2">&nbsp;<span title = "Burası sıfırdan farklı olursa, bu Stop Loss değeri için de tarama yapacaktır">StopLoss-2&nbsp;<span/><input min = "0" step = ".5" style = "width:40px;background-color:black" type="number" id="inp5" value="0">&nbsp;<span title = "Bu kutucuğa tik koyarsanız, Stop Loss değerleri için ekstra tarama yapacaktır!">Trailing Stop&nbsp;</span><input type="checkbox" id="inp6"></div>';
 	html += '<div id="blg"><textarea id = "bilgi_ekran" rows = "6" style = "background-color:black" ></textarea></div><br>';
 	html += '<span id = "bilgi">Başlamadan önce ayarlarınızı kontrol edin!</span><br><br>';
 	html += '<button id = "btn" class ="button-1iktpaT1 size-m-2G7L7Qat intent-primary-1-IOYcbg appearance-default-dMjF_2Hu">Başlat!</button>';
@@ -21,6 +23,9 @@ function baslangic(){
 	inp1.value = cek(inp1.id);
 	inp2.value = cek(inp2.id);
 	inp3.value = cek(inp3.id);
+	inp4.value = cek(inp4.id);
+	inp5.value = cek(inp5.id);
+	inp6.checked = cek(inp6.id);
 	blg.style.marginLeft = inp1.offsetLeft + periyot.offsetWidth + "px";
 	blg.style.top = inp1.parentNode.offsetTop + "px";
 	blg.style.position = "absolute";
@@ -49,6 +54,15 @@ async function baslat(btn){
 		kaydet("inp1", pmin);
 		kaydet("inp2", pmax);
 		kaydet("inp3", smax);
+		kaydet("inp4", inp4.value);
+		kaydet("inp5", inp5.value);
+		if(inp6.checked){
+			kaydet("inp6", 1);
+		}
+		else{
+			kaydet("inp6", 0);
+		}
+		
 
 		btn.disabled = true;
 
@@ -57,7 +71,7 @@ async function baslat(btn){
 		}
 		bilgi.innerHTML = "Stoploss-1 için deneniyor..";
 		girisler.slos1[0] = true;
-		await input_ayarla(stoploss, girisler.slos1[1]);
+		await input_ayarla(stoploss, inp4.value);
 		await init();
 		
 	}
@@ -144,33 +158,29 @@ async function input_ayarla(inp, val){
 
 async function hmm_ok(){
 
-	if(girisler.slos1[0] == false){
-		bilgi.innerHTML = "Stoploss-1 için deneniyor..";
-		girisler.slos1[0] = true;
-		await input_ayarla(stoploss, girisler.slos1[1]);
-	}
-	else if (girisler.slos2[0] == false){
+
+	if (inp5.value != 0 && girisler.slos2[0] == false){
 		bilgi.innerHTML = "Stoploss-2 için deneniyor..";
 		girisler.slos2[0] = true;
-		await input_ayarla(stoploss, girisler.slos2[1]);
+		await input_ayarla(stoploss, inp5.value);
 
 	}	
-	else if (girisler.tckslos1[0] == false){
+	else if (inp6.checked == true && inp5.value == 0 && girisler.tckslos1[0] == false){
 		bilgi.innerHTML = "Tralling Stoploss-1 için deneniyor..";
 		if(!tcheck.checked){
 			await clk(tcheck);
 		}
 		girisler.tckslos1[0] = true;
-		await input_ayarla(stoploss, girisler.tckslos1[1]);
+		await input_ayarla(stoploss, inp4.value);
 
 	}
-	else if (girisler.tckslos2[0] == false){
+	else if (inp6.checked == true && inp5.value!=0 && girisler.tckslos2[0] == false){
 		bilgi.innerHTML = "Tralling Stoploss-2 için deneniyor..";
 		if(!tcheck.checked){
 			await clk(tcheck);
 		}
 		girisler.tckslos2[0] = true;
-		await input_ayarla(stoploss, girisler.tckslos2[1]);
+		await input_ayarla(stoploss, inp5.value);
 
 	}
 	else{
@@ -191,8 +201,8 @@ async function init(){
 			if (await hmm_ok() == "bitti"){
 				
 				bilgi.innerHTML = "En yüksek değerler bulundu";
-				alert("En yüksek değerler bulundu");
 				bilgi_ekran.value = sonuc_text;
+				alert("En yüksek değerler bulundu");
 				return;
 			}
 			
