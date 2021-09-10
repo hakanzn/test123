@@ -174,6 +174,15 @@ async function hmm_ok(){
 		await input_ayarla(stoploss, inp4.value);
 
 	}
+	else if (inp6.checked == true && inp5.value!=0 && inp4.value != 0 && girisler.tckslos1[0] == false){
+		bilgi.innerHTML = "Tralling Stoploss-1 için deneniyor..";
+		if(!tcheck.checked){
+			await clk(tcheck);
+		}
+		girisler.tckslos1[0] = true;
+		await input_ayarla(stoploss, inp4.value);
+	}
+
 	else if (inp6.checked == true && inp5.value!=0 && girisler.tckslos2[0] == false){
 		bilgi.innerHTML = "Tralling Stoploss-2 için deneniyor..";
 		if(!tcheck.checked){
@@ -183,6 +192,10 @@ async function hmm_ok(){
 		await input_ayarla(stoploss, inp5.value);
 
 	}
+	
+	
+		
+
 	else{
 		return "bitti";
 	}
